@@ -60,6 +60,9 @@ function updateSizeOnScreen() {
 colorEl.addEventListener('change', (e) => color = e.target.value)
 eraseBtn.addEventListener('click', () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    size = 10
+    updateSizeOnScreen()
+
 });
 increaseBtn.addEventListener('click', () => {
     size += 5
