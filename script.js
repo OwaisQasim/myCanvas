@@ -3,6 +3,7 @@ const decreaseBtn = document.getElementById('decrease')
 const sizeBtn = document.getElementById('size')
 const increaseBtn = document.getElementById('increase')
 const eraseBtn = document.getElementById('clear')
+const undoBtn = document.getElementById('undo')
 const ctx = canvas.getContext('2d')
 const colorEl = document.getElementById('color')
 
@@ -11,12 +12,14 @@ let color = 'black'
 let isPressed = false
 let x
 let y
+let history = []
 
 canvas.addEventListener('mousedown', e => {
     isPressed = true
     x = e.offsetX
     y = e.offsetY
     drawCircle(x, y)
+    pushToHistory()
 })
 
 canvas.addEventListener('mouseup', () => {
@@ -62,8 +65,9 @@ eraseBtn.addEventListener('click', () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     size = 10
     updateSizeOnScreen()
+    pushToHistory()
+})
 
-});
 increaseBtn.addEventListener('click', () => {
     size += 5
     if (size > 30) {
@@ -80,3 +84,30 @@ decreaseBtn.addEventListener('click', () => {
     updateSizeOnScreen()
 })
 
+function pushToHistory() {
+    const state = canvas.toDataURL()
+    history.push(state)
+}
+
+function undo() {
+    if (history.length > 1) {
+        history.pop()
+        const state = history[history.length - 1]
+        const img = new Image()
+        img.src = state
+        img.onload = function () {
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
+            ctx.drawImage(img, 0, 0)
+        }
+    }
+}
+
+undoBtn.addEventListener('click', () => {
+    undo()
+})
+
+window.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.key === 'z') {
+        undo()
+    }
+})
