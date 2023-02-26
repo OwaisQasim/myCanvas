@@ -1,8 +1,13 @@
 const canvas = document.getElementById('canvas')
+const decreaseBtn = document.getElementById('decrease')
+const sizeBtn = document.getElementById('size')
+const increaseBtn = document.getElementById('increase')
+const eraseBtn = document.getElementById('clear')
 const ctx = canvas.getContext('2d')
+const colorEl = document.getElementById('color')
 
 let size = 10
-color = 'red'
+let color = 'black'
 let isPressed = false
 let x
 let y
@@ -47,4 +52,28 @@ function drawLine(x1, y1, x2, y2) {
     ctx.lineWidth = size * 2
     ctx.stroke()
 }
+
+function updateSizeOnScreen() {
+    sizeBtn.innerHTML = size
+}
+
+colorEl.addEventListener('change', (e) => color = e.target.value)
+eraseBtn.addEventListener('click', () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+});
+increaseBtn.addEventListener('click', () => {
+    size += 5
+    if (size > 30) {
+        size = 30
+    }
+    updateSizeOnScreen()
+})
+
+decreaseBtn.addEventListener('click', () => {
+    size -= 5
+    if (size < 5) {
+        size = 5
+    }
+    updateSizeOnScreen()
+})
 
